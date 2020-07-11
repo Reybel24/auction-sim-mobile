@@ -1,5 +1,5 @@
 <template lang="html">
-    <BottomNavigation class="BottomNavigation">
+    <BottomNavigation class="BottomNavigation" selectedIndex="2">
         <!-- Navigation -->
         <TabStrip>
             <TabStripItem class="navigation__item">

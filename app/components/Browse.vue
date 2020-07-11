@@ -7,14 +7,26 @@
         <!-- Content -->
         <ScrollView orientation="vertical" scrollBarIndicatorVisible="false" class="content">
           <StackLayout>
+            <!-- Header -->
             <Label text="Browse Listings" class="head" />
-            <!-- Categories here -->
+            
+            <!-- Categories -->
             <ScrollView orientation="horizontal" class="category-group" scrollBarIndicatorVisible="false">
               <StackLayout orientation="horizontal">
                   <StackLayout orientation="vertical" class="item" v-for="(cat, index) in categories" :key="index" @tap="tapCategory(cat)">
                       <Image :src="getImg(cat.img)" />
                       <Label :text="cat.name" /> 
                   </StackLayout>
+              </StackLayout>
+            </ScrollView>
+
+            <!-- Filters -->
+            <ScrollView orientation="horizontal" class="filter-group" scrollBarIndicatorVisible="false">
+              <StackLayout orientation="horizontal">
+                  <FlexboxLayout orientation="vertical" class="item" v-for="(filter, index) in filters" :key="index" @tap="tapFilter(filter)">
+                      <Label :text="String.fromCharCode('0x' + filter.icon)" class="fas icon" v-if="'icon' in filter" :style="{ color: ('iconColor' in filter) ? filter.iconColor : '#414141' }" />
+                      <Label :text="filter.name" /> 
+                  </FlexboxLayout>
               </StackLayout>
             </ScrollView>
 
@@ -190,6 +202,11 @@ export default {
         { name: 'Decoration', img: 'office_chair_0' },
         { name: 'Food', img: 'office_chair_0' }
       ],
+      filters: [
+        { name: "Expiring Soon" , key: "exp_soon", icon: "f252", iconColor: "#15aabf" },
+        { name: "Under 100" , key: "under_one_hundred", icon: "f53a", iconColor: "#15aabf" },
+        { name: "Hot" , key: "hot", icon: "f06d", iconColor: "#e38749" }
+      ],
       sellers: [
         { id: 2, name: 'Steve Rogers' },
         { id: 5, name: 'Tony Stark' },
@@ -217,7 +234,10 @@ export default {
       return -1;
     },
     tapCategory(cat) {
-      console.log("showing " + cat.name)
+      console.log("showing " + cat.name);
+    },
+    tapFilter(filter) {
+      console.log("Filtering by: " + filter.name);
     }
   }
 };
@@ -243,6 +263,7 @@ ActionBar {
 
 .content {
   background-color: #ffffff;
+  font-family: "TT Norms";
 
   .head {
     color: rgb(49, 49, 49);
@@ -254,10 +275,9 @@ ActionBar {
   .category-group {
     background-color: white;
     height: 230px;
-    margin-top: 6px;
+    margin-top: 20px;
 
     .item {
-      width: 280px;
       height: 100%;
       justify-content: center;
       vertical-align: center;
@@ -269,15 +289,45 @@ ActionBar {
 
       Image {
         object-fit: cover;
-        width: 50%;
+        width: 280px;
         height: 60%;
+        margin-bottom: 17px;
+      }
+    }
+  }
+
+  .filter-group {
+    background-color: white;
+    height: 100px;
+    margin-top: 30px;
+
+    .item {
+      height: 90%;
+      border-radius: 50px;
+      padding: 0px 40px 0px 40px;
+      border-color: rgb(44, 44, 44);
+      border-width: 1px;
+      font-size: 14px;
+      align-items: center;
+      justify-content: center;
+      margin-left: 45px;
+      font-weight: 400;
+      color: rgb(49, 49, 49);
+
+      &:active {
+        background-color: green;
+      }
+
+      .icon {
+        font-size: 10px;
+        margin-right: 20px;
       }
     }
   }
 
   .item-group {
     background-color: white;
-    margin-top: 20px;
+    margin-top: 40px;
 
     .itemy {
       background-color: rgb(255, 255, 255);
@@ -286,7 +336,6 @@ ActionBar {
       color: rgb(49, 49, 49);
       border-width: 1px;
       border-color: rgb(214, 214, 214);
-      font-family: "TT Norms";
       font-weight: 300;
 
       .left {
@@ -351,6 +400,8 @@ ActionBar {
             width: 50%;
             background-color: white;
             flex-direction: column;
+            font-size: 14px;
+            font-weight: 400;
           }
 
           .btn-view {
