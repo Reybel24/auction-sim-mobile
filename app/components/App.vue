@@ -1,5 +1,5 @@
 <template lang="html">
-    <BottomNavigation>
+    <BottomNavigation class="BottomNavigation">
         <TabStrip>
             <TabStripItem class="navigation__item">
                 <Label text="Home"></Label>
@@ -55,6 +55,9 @@
     @import "~@nativescript/theme/scss/variables/blue";
     // End custom common variables
 
-    // Custom styles
+// Custom styles
+.BottomNavigation {
+    background-color: blue;
+}
 
 </style>

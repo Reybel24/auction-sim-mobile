@@ -11,8 +11,8 @@
             <!-- Categories here -->
             <ScrollView orientation="horizontal" class="category-group" scrollBarIndicatorVisible="false">
               <StackLayout orientation="horizontal">
-                  <StackLayout orientation="vertical" class="item" v-for="cat in categories" :key="cat.name">
-                      <Image src="~/assets/items/vase_plant_0.png" />
+                  <StackLayout orientation="vertical" class="item" v-for="(cat, index) in categories" :key="index" @tap="tapCategory(cat)">
+                      <Image :src="getImg(cat.img)" />
                       <Label :text="cat.name" /> 
                   </StackLayout>
               </StackLayout>
@@ -20,9 +20,9 @@
 
             <!-- Items list -->
             <StackLayout class="item-group">
-                <FlexboxLayout class="itemy" v-for="item in items"> 
+                <FlexboxLayout class="itemy" v-for="(item, index) in items" :key="index"> 
                   <FlexboxLayout class="left">
-                    <Image src="~/assets/items/laundry_0.png" />
+                    <Image :src="getImg(item.img)" />
                   </FlexboxLayout>
                   <FlexboxLayout class="right">
                     <FlexboxLayout class="top">
@@ -91,8 +91,8 @@ export default {
         },
         {
           id: 0,
-          name: "Laundry Machine",
-          img: "laundry_0",
+          name: "Oak Shelf",
+          img: "shelf_0",
           sellerId: 5,
           highestBid: 57,
           numBids: 14,
@@ -101,23 +101,23 @@ export default {
         },
         {
           id: 0,
-          name: "Red Comfy Sofa",
-          img: "sofa_0",
+          name: "Samsong Smart Fridge",
+          img: "fridge_0",
+          sellerId: 2,
+          highestBid: 605,
+          numBids: 29,
+          exp: "07-09-2020:10:08:37",
+          tags: ["home", "furniture", "decoration"]
+        },
+        {
+          id: 0,
+          name: "Wooden Wardrobe",
+          img: "wardrobe_0",
           sellerId: 7,
           highestBid: 109,
           numBids: 21,
           exp: "07-09-2020:10:08:37",
           tags: ["furniture", "living room"]
-        },
-        {
-          id: 0,
-          name: "Ikeo Garden Plant",
-          img: "vase_plant_0",
-          sellerId: 2,
-          highestBid: 68,
-          numBids: 29,
-          exp: "07-09-2020:10:08:37",
-          tags: ["home", "furniture", "decoration"]
         },
         {
           id: 0,
@@ -181,11 +181,11 @@ export default {
         }
       ],
       categories: [
-        { name: 'Technology', img: 'office_chair_0' },
-        { name: 'Furniture', img: 'office_chair_0' },
-        { name: 'Decoration', img: 'office_chair_0' },
-        { name: 'Food', img: 'office_chair_0' },
-        { name: 'Technology', img: 'office_chair_0' },
+        { name: 'Technology', img: 'stove_0' },
+        { name: 'Office', img: 'office_chair_0' },
+        { name: 'Food', img: 'salad' },
+        { name: 'Decoration', img: 'vase_plant_0' },
+        { name: 'Bedroom', img: 'bunk_beds_0' },
         { name: 'Furniture', img: 'office_chair_0' },
         { name: 'Decoration', img: 'office_chair_0' },
         { name: 'Food', img: 'office_chair_0' }
@@ -199,9 +199,11 @@ export default {
   },
   methods: {
     getImg(imgName) {
-      console.log(imgName);
-      // var _img = require("~/assets/items/" + imgName + ".png")
-      return "~/assets/items/laundry.png";
+      // Need to load asset in first
+      var _img = require("~/assets/items/" + imgName + ".png");
+
+      // After loading it, we can return its path to 'src'
+      return "~/assets/items/" + imgName + ".png";
     },
     doSomething(item) {
       console.log('tapped ' + item.name);
@@ -213,6 +215,9 @@ export default {
         }
       }
       return -1;
+    },
+    tapCategory(cat) {
+      console.log("showing " + cat.name)
     }
   }
 };
@@ -252,17 +257,19 @@ ActionBar {
     margin-top: 6px;
 
     .item {
-      width: 350px;
+      width: 280px;
       height: 100%;
       justify-content: center;
       vertical-align: center;
       text-align: center;
       background-color: white;
       color: rgb(49, 49, 49);
+      font-size: 13px;
+      font-weight: 500;
 
       Image {
         object-fit: cover;
-        width: 20%;
+        width: 50%;
         height: 60%;
       }
     }
@@ -283,15 +290,15 @@ ActionBar {
       font-weight: 300;
 
       .left {
-        margin-left: 5%;
-        width: 24%;
+        margin-left: 8%;
+        width: 33%;
         text-align: center;
         vertical-align: center;
         // background-color: rgb(180, 180, 180);
       }
 
       .right {
-        margin-left: 60px;
+        margin-left: 90px;
         flex-direction: column;
         flex: 1;
 
@@ -353,6 +360,9 @@ ActionBar {
             width: 36%;
             height: 150px;
             font-weight: 500;
+            box-shadow:rgb(153, 153, 153);
+            border-width: 1;
+            border-color: transparent;
 
             &:active {
               background-color: #138e9e;
