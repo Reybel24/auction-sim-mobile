@@ -20,11 +20,17 @@
     font-weight: 400;
 }
 
+.icon {
+    font-size: 19px;
+    color: #6c678e;
+}
+
 // Custom tabstrip item class
 .navigation__item {
     &:active,
     &:active Label {
-        @include colorize($color: complementary);
+        // @include colorize($color: complementary);
+        // color: #ff596f;
     }
 }
 
