@@ -66,9 +66,18 @@
 </template>
 
 <script>
+// Signalr
+require("nativescript-websockets");
+var SignalrCore = require("nativescript-signalr-core").SignalrCore;
+var signalrCore = new SignalrCore();
+
+// Axios
+const axios = require("axios");
+
 export default {
   data() {
     return {
+      io: null,
       message: "<!-- Browse page content goes here -->",
       items: [
         {
@@ -193,25 +202,36 @@ export default {
         }
       ],
       categories: [
-        { name: 'Technology', img: 'stove_0' },
-        { name: 'Office', img: 'office_chair_0' },
-        { name: 'Food', img: 'salad' },
-        { name: 'Decoration', img: 'vase_plant_0' },
-        { name: 'Bedroom', img: 'bunk_beds_0' },
-        { name: 'Furniture', img: 'office_chair_0' },
-        { name: 'Decoration', img: 'office_chair_0' },
-        { name: 'Food', img: 'office_chair_0' }
+        { name: "Technology", img: "stove_0" },
+        { name: "Office", img: "office_chair_0" },
+        { name: "Food", img: "salad" },
+        { name: "Decoration", img: "vase_plant_0" },
+        { name: "Bedroom", img: "bunk_beds_0" },
+        { name: "Furniture", img: "office_chair_0" },
+        { name: "Decoration", img: "office_chair_0" },
+        { name: "Food", img: "office_chair_0" }
       ],
       filters: [
-        { name: "Expiring Soon" , key: "exp_soon", icon: "f252", iconColor: "#15aabf" },
-        { name: "Under 100" , key: "under_one_hundred", icon: "f53a", iconColor: "#15aabf" },
-        { name: "Hot" , key: "hot", icon: "f06d", iconColor: "#e38749" }
+        {
+          name: "Expiring Soon",
+          key: "exp_soon",
+          icon: "f252",
+          iconColor: "#15aabf"
+        },
+        {
+          name: "Under 100",
+          key: "under_one_hundred",
+          icon: "f53a",
+          iconColor: "#15aabf"
+        },
+        { name: "Hot", key: "hot", icon: "f06d", iconColor: "#e38749" }
       ],
       sellers: [
-        { id: 2, name: 'Steve Rogers' },
-        { id: 5, name: 'Tony Stark' },
-        { id: 7, name: 'Bruce Banners' }
-      ]
+        { id: 2, name: "Steve Rogers" },
+        { id: 5, name: "Tony Stark" },
+        { id: 7, name: "Bruce Banners" }
+      ],
+      signalrCore: null
     };
   },
   methods: {
@@ -223,7 +243,25 @@ export default {
       return "~/assets/items/" + imgName + ".png";
     },
     doSomething(item) {
-      console.log('tapped ' + item.name);
+      console.log("tapped " + item.name);
+      this.placeBid();
+      const questionId = "b00c58c0-df00-49ac-ae85-0a135f75e01b";
+
+      axios
+        .get(`https://localhost:5001/api/question`)
+        .then(res => {
+          console.log("got question data!");
+        })
+        .catch(error => {
+          console.log("something went wrong getting the question");
+          console.log(error);
+        });
+
+      axios
+        .patch(`https://localhost:5001/api/question/${this.questionId}/upvote`)
+        .then(res => {
+          console.log("upvoted!");
+        });
     },
     getSellerById(sellerId) {
       for (var seller of this.sellers) {
@@ -238,7 +276,74 @@ export default {
     },
     tapFilter(filter) {
       console.log("Filtering by: " + filter.name);
+    },
+    async connectToSocket() {
+      return new Promise(resolve => {
+        // Connect to server
+        this.io = new SocketIO("http://10.0.2.2:3030");
+        this.io.connect();
+        resolve();
+      });
+    },
+    isConnected() {
+      if (this.io != null) {
+        return true;
+      }
+      return false;
+    },
+    placeBid() {
+      // Check that socket is connected
+      if (!this.isConnected()) return;
+
+      console.log("placing bid...");
+
+      var _bidDetails = { itemId: 4, amt: 8, user: "me" };
+      this.io.emit("place_bid", _bidDetails);
+    },
+    fetchItems() {
+      // Check that socket is connected
+      if (!this.isConnected()) return;
+
+      console.log("fetching items...");
+
+      // Fetch
+      this.io.emit("get_items", function(response) {
+        console.log("items recieved!");
+      });
+    },
+    updateItem() {
+      var rand = Math.floor(Math.random() * (35 - 3 + 1) + 3);
+      this.items[1].highestBid += rand;
+    },
+    async connectToHub() {
+      console.log("Attempting connection to hub..");
+      this.signalrCore = new SignalrCore();
+      this.signalrCore
+        .start("http://10.0.2.2:5000/question-hub")
+        .then(isConnected => {
+          console.log("Connection successful!");
+        })
+        .catch(error => {
+          console.log("Connection error");
+          console.log(error);
+        });
+
+      this.signalrCore.on("connected", data => {
+        console.log("Connected to hub.");
+      });
+
+      // Subscriptions
+      this.signalrCore.on("sample", num => {
+        this.updateItem();
+      });
     }
+  },
+  async mounted() {
+    // Connect to signalR hub
+    await this.connectToHub();
+
+    // Get items
+    this.fetchItems();
   }
 };
 </script>
@@ -256,7 +361,7 @@ ActionBar {
   border-bottom-width: 1px;
   height: 300px;
 
-  Image {
+  image {
     width: 325px;
   }
 }
@@ -287,7 +392,7 @@ ActionBar {
       font-size: 13px;
       font-weight: 500;
 
-      Image {
+      image {
         object-fit: cover;
         width: 280px;
         height: 60%;
@@ -374,11 +479,11 @@ ActionBar {
           .name {
             font-size: 17px;
           }
-          
+
           .bid {
             font-size: 17px;
             font-weight: 500;
-            
+
             .icon {
               width: 50px;
               margin-right: 14px;
@@ -411,7 +516,7 @@ ActionBar {
             width: 36%;
             height: 150px;
             font-weight: 500;
-            box-shadow:rgb(153, 153, 153);
+            box-shadow: rgb(153, 153, 153);
             border-width: 1;
             border-color: transparent;
 
