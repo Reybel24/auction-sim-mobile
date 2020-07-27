@@ -1,96 +1,46 @@
 <template lang="html">
-    <BottomNavigation class="BottomNavigation" selectedIndex="2">
-        <!-- Navigation -->
-        <TabStrip>
-            <TabStripItem class="navigation__item">
-                <Label :text="String.fromCharCode(0xf015)" class="fas icon" />
-            </TabStripItem>
-            <TabStripItem class="navigation__item">
-                <Label :text="String.fromCharCode(0xf002)" class="fas icon" />
-            </TabStripItem>
-            <TabStripItem class="navigation__item">
-                <Label :text="String.fromCharCode(0xf54e)" class="fas icon" />
-            </TabStripItem>
-            <TabStripItem class="navigation__item">
-                <Label :text="String.fromCharCode(0xf004)" class="fas icon" />
-            </TabStripItem>
-            <TabStripItem class="navigation__item">
-                <Label :text="String.fromCharCode(0xf2bd)" class="fas icon" />
-            </TabStripItem>
-        </TabStrip>
-
-        <!-- Views -->
-        <TabContentItem>
-            <Frame id="items">
-                <Items/>
+<Page>
+    <GridLayout rows="*, auto" backgroundColor="lightgray">
+        <ContentView row="0">
+            <Frame>
+                <Search />
             </Frame>
-        </TabContentItem>
+        </ContentView>
 
-        <TabContentItem>
-            <Frame id="search">
-                <Search/>
-            </Frame>
-        </TabContentItem>
-
-        <TabContentItem>
-            <Frame id="search">
-                <Browse/>
-            </Frame>
-        </TabContentItem>
-
-        <TabContentItem>
-            <Frame id="browse">
-                <Search/>
-            </Frame>
-        </TabContentItem>
-
-        <TabContentItem>
-            <Frame id="watched">
-                <Search/>
-            </Frame>
-        </TabContentItem>
-
-        <TabContentItem>
-            <Frame id="profile">
-                <Search/>
-            </Frame>
-        </TabContentItem>
-    </BottomNavigation>
+        <Nav row="1" />
+    </GridLayout>
+</Page>
 </template>
 
 <script>
-import Items from "./Items.vue";
-import Browse from "./Browse.vue";
+// Nav bar
+import Nav from "./Nav.vue";
+
 import Search from "./Search.vue";
 
 export default {
   components: {
-    Items,
-    Browse,
+    Nav,
     Search
   },
-  methods: {
-      switchTab(tab) {
-          console.log("Navigatsing");
-          this.$navigateTo(Browse);
-      },
-      sampleHome() {
-          console.log("going home")
-      }
-  }
+  methods: {}
 };
 </script>
 
 <style lang="scss">
-// Start custom common variables
+// Import custom common variables
 @import "~@nativescript/theme/scss/variables/blue";
-// End custom common variables
 
 // Custom styles
-TabStrip {
-    background-color: rgb(255, 255, 255);
-    selected-item-color: #ff596f;
-    un-selected-item-color: #6c678e;;
-    highlight-color: green;
+.action-bar {
+  background-color: #ffffff;
+  color: red;
+  border-color: rgb(153, 153, 153);
+  border-bottom-width: 1px;
+  height: 300px;
+
+  image {
+    width: 325px;
+  }
 }
 </style>

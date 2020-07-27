@@ -1,6 +1,7 @@
 <template lang="html">
-    <Page>
-        <ActionBar flat="true" class="action-bar">
+    <Page class="page">
+      <!-- Action bar with logo -->
+        <ActionBar flat="true" class="action-bar" row="2">
             <Image src="~/assets/logo.png" />
         </ActionBar>
 
@@ -54,7 +55,7 @@
                         <Label :text="item.numBids + ' bids'" class="bids" />
                         <Label text="04:39" class="time" />
                       </FlexboxLayout>
-                      <Button text="View" @tap="doSomething(item)" class="btn-view" />
+                      <Button text="View" @tap="goToItem(item)" class="btn-view" />
                     </FlexboxLayout>
                   </FlexboxLayout>
                 </FlexboxLayout>
@@ -73,6 +74,9 @@ var signalrCore = new SignalrCore();
 
 // Axios
 const axios = require("axios");
+
+// Routes (temporarily here)
+import routes from "../routes";
 
 export default {
   data() {
@@ -315,6 +319,18 @@ export default {
       var rand = Math.floor(Math.random() * (35 - 3 + 1) + 3);
       this.items[1].highestBid += rand;
     },
+    goToItem(item) {
+      console.log("viewing an item");
+
+      // Navigate to item page
+      this.$navigateTo(routes["item"], {
+        props: { item: item },
+        transition: {
+          name: "fade",
+          duration: 200
+        }
+      });
+    },
     async connectToHub() {
       console.log("Attempting connection to hub..");
       this.signalrCore = new SignalrCore();
@@ -339,6 +355,8 @@ export default {
     }
   },
   async mounted() {
+    // console.log(this.$navigator.path)
+
     // Connect to signalR hub
     await this.connectToHub();
 
