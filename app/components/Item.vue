@@ -1,48 +1,48 @@
-<template lang="html">
-    <Page class="page">
-      <ActionBar flat="true" class="action-bar" row="2">
-            <Image src="~/assets/logo.png" />
+<template lang='html'>
+    <Page class='page'>
+      <ActionBar flat='true' class='action-bar' row='2'>
+            <Image src='~/assets/logo.png' />
         </ActionBar>
         
         <!-- Content -->
-        <ScrollView orientation="vertical" scrollBarIndicatorVisible="false" class="content">
+        <ScrollView orientation='vertical' scrollBarIndicatorVisible='false' class='content'>
           <!-- Item -->
-          <StackLayout class="item">
+          <StackLayout class='item' v-if="item != null">
             <!-- Item name -->
-            <FlexboxLayout flexDirection="row" class="section title">
-              <FlexboxLayout class="avatar">
-                <Image :src="getAvatar('022-summer')" />
+            <FlexboxLayout flexDirection='row' class='section title'>
+              <FlexboxLayout class='avatar'>
+                <Image :src='getAvatar('022-summer')' />
               </FlexboxLayout>
-              <FlexboxLayout flexDirection="column">
-                <Label :text="item.name" class="name" />
-                <Label text="Auctioned by Bobby Boy" class="seller" />
+              <FlexboxLayout flexDirection='column'>
+                <Label :text='item.name' class='name' />
+                <Label text='Auctioned by Bobby Boy' class='seller' />
               </FlexboxLayout>
             </FlexboxLayout>
 
             <!-- Item image -->
-            <FlexboxLayout flexDirection="row" class="section img">
-              <Image :src="getImg(item.img)" />
+            <FlexboxLayout flexDirection='row' class='section img'>
+              <Image :src='getImg(item.img)' />
             </FlexboxLayout>
 
             <!-- Highest bid -->
-            <FlexboxLayout flexDirection="column" class="section current-bid">
-              <Label text="Current Highest Bid" class="label" />
-              <Label text="$130" class="bid" />
-              <FlexboxLayout class="bidder">
-                <Image :src="getAvatar('022-summer')" />
-                <Label text="Stewart M." class="name" />
+            <FlexboxLayout flexDirection='column' class='section current-bid'>
+              <Label text='CURRENT HIGHEST BID' class='label' />
+              <Label :text='"$" + item.highestBid' class='bid' />
+              <FlexboxLayout class='bidder'>
+                <Image :src='getAvatar('022-summer')' />
+                <Label text='Stewart M.' class='name' />
               </FlexboxLayout>
             </FlexboxLayout>
 
             <!-- Button -->
-            <FlexboxLayout flexDirection="row" class="actions">
-              <FlexboxLayout flexDirection="row" class="btn">
-                <Label text="Place Bid" class="label" />
+            <FlexboxLayout flexDirection='row' class='actions'>
+              <FlexboxLayout flexDirection='row' class='btn'>
+                <Label text='Place Bid' class='label' />
               </FlexboxLayout>
             </FlexboxLayout>
 
-            <FlexboxLayout class="history">
-              <Label text="Some history here" class="seller" />
+            <FlexboxLayout class='history'>
+              <Label text='Some history here' class='seller' />
             </FlexboxLayout>
           </StackLayout>
         </ScrollView>
@@ -50,59 +50,77 @@
 </template>
 
 <script>
-// Signalr
-require("nativescript-websockets");
-var SignalrCore = require("nativescript-signalr-core").SignalrCore;
-var signalrCore = new SignalrCore();
-
-// Axios
-const axios = require("axios");
-
+import Vue from 'vue';
 export default {
   props: {
-    item: {
-      type: Object,
-      default: () => {},
-      required: false
+    itemId: {
+      type: String,
+      default: null,
+      required: true
     }
   },
   data() {
     return {
-      signalrCore: null
+      item: null
     };
   },
   methods: {
     getImg(imgName) {
       // Need to load asset in first
-      var _img = require("~/assets/items/" + imgName + ".png");
+      var _img = require('~/assets/items/' + imgName + '.png');
 
       // After loading it, we can return its path to 'src'
-      return "~/assets/items/" + imgName + ".png";
+      return '~/assets/items/' + imgName + '.png';
     },
     getAvatar(imgName) {
       // Need to load asset in first
-      var _img = require("~/assets/avatars/" + imgName + ".png");
+      var _img = require('~/assets/avatars/' + imgName + '.png');
 
       // After loading it, we can return its path to 'src'
-      return "~/assets/avatars/" + imgName + ".png";
+      return '~/assets/avatars/' + imgName + '.png';
+    },
+    onScoreChanged({ questionId, score }) {
+      console.log('item changed');
     }
   },
-  async mounted() {
-    console.log("Item clicked: " + this.item.name);
+  mounted() {
+    // console.log('Item clicked: ' + this.item.name);
+  },
+  created() {
+    // Load the item and notify the server we are watching this item
+    console.log('loading item by id: ' + this.itemId)
+    this.$http
+      .get(`/api/question/auction-items/` + this.itemId)
+      .then(res => {
+        console.log('recieved item data');
+        this.item = res.data;
+
+        // Subscribe to changes to this specific item (joins item group)
+        return this.$itemHub.itemOpened(this.item.id);
+      })
+      .catch(error => {
+        console.log('something went wrong');
+        console.log(error);
+      });
+  },
+  beforeDestroy() {
+    // Unsubscribe from changes to this specific item
+    if (this.item == null) return;
+    this.$itemHub.itemClosed(this.item.id);
   }
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang='scss' scoped>
 // Start custom common variables
-@import "~@nativescript/theme/scss/variables/blue";
+@import '~@nativescript/theme/scss/variables/blue';
 
 .page {
   background-color: rgb(242, 242, 246);
 
   .content {
     background-color: #ffffff;
-    font-family: "TT Norms";
+    font-family: 'TT Norms';
     align-items: flex-start;
     justify-content: flex-start;
   }
@@ -162,7 +180,8 @@ export default {
     align-items: center;
 
     .label {
-      font-size: 17px;
+      font-size: 15px;
+      color: rgb(88, 88, 88);
     }
 
     .bid {
@@ -177,7 +196,7 @@ export default {
       align-items: center;
       justify-content: center;
       background-color: rgb(231, 231, 231);
-      border-radius: 15px;
+      border-radius: 100px;
       padding: 10px 45px 10px 45px;
       margin-top: 30px;
 
@@ -205,7 +224,8 @@ export default {
     justify-content: center;
     font-size: 16px;
     background-color: #ff596f;
-    font-family: "TT Norms";
+    font-family: 'TT Norms';
+    font-weight: 500;
 
     .btn:active {
       background-color: blue;

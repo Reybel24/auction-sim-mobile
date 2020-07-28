@@ -36,6 +36,8 @@
 
 // Common page class
 .page__content {
+    font-family: "TT Norms";
+    
     &-icon,
     &-placeholder {
         color: const(grey);

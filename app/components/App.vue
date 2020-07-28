@@ -14,9 +14,8 @@
 
 <script>
 // Nav bar
-import Nav from "./Nav.vue";
-
-import Search from "./Search.vue";
+import Nav from './Nav.vue';
+import Search from './Search.vue';
 
 export default {
   components: {
@@ -29,7 +28,7 @@ export default {
 
 <style lang="scss">
 // Import custom common variables
-@import "~@nativescript/theme/scss/variables/blue";
+@import '~@nativescript/theme/scss/variables/blue';
 
 // Custom styles
 .action-bar {

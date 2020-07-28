@@ -67,173 +67,169 @@
 </template>
 
 <script>
-// Signalr
-require("nativescript-websockets");
-var SignalrCore = require("nativescript-signalr-core").SignalrCore;
-var signalrCore = new SignalrCore();
-
-// Axios
-const axios = require("axios");
-
 // Routes (temporarily here)
-import routes from "../routes";
+import routes from '../routes';
+
+// Util
+import { guid_to_base64 } from '@/util/common.js';
 
 export default {
   data() {
     return {
       io: null,
-      message: "<!-- Browse page content goes here -->",
-      items: [
+      message: '<!-- Browse page content goes here -->',
+      itemsOld: [
         {
           id: 0,
-          name: "Laundry Machine",
-          img: "laundry_0",
+          name: 'Laundry Machine',
+          img: 'laundry_0',
           sellerId: 5,
           highestBid: 57,
           numBids: 14,
-          exp: "07-09-2020:10:08:37",
-          tags: ["home", "utility"]
+          exp: '07-09-2020:10:08:37',
+          tags: ['home', 'utility']
         },
         {
           id: 0,
-          name: "Red Comfy Sofa",
-          img: "sofa_0",
+          name: 'Red Comfy Sofa',
+          img: 'sofa_0',
           sellerId: 7,
           highestBid: 109,
           numBids: 21,
-          exp: "07-09-2020:10:08:37",
-          tags: ["furniture", "living room"]
+          exp: '07-09-2020:10:08:37',
+          tags: ['furniture', 'living room']
         },
         {
           id: 0,
-          name: "Ikeo Garden Plant",
-          img: "vase_plant_0",
+          name: 'Ikeo Garden Plant',
+          img: 'vase_plant_0',
           sellerId: 2,
           highestBid: 68,
           numBids: 29,
-          exp: "07-09-2020:10:08:37",
-          tags: ["home", "furniture", "decoration"]
+          exp: '07-09-2020:10:08:37',
+          tags: ['home', 'furniture', 'decoration']
         },
         {
           id: 0,
-          name: "Oak Shelf",
-          img: "shelf_0",
+          name: 'Oak Shelf',
+          img: 'shelf_0',
           sellerId: 5,
           highestBid: 57,
           numBids: 14,
-          exp: "07-09-2020:10:08:37",
-          tags: ["home", "utility"]
+          exp: '07-09-2020:10:08:37',
+          tags: ['home', 'utility']
         },
         {
           id: 0,
-          name: "Samsong Smart Fridge",
-          img: "fridge_0",
+          name: 'Samsong Smart Fridge',
+          img: 'fridge_0',
           sellerId: 2,
           highestBid: 605,
           numBids: 29,
-          exp: "07-09-2020:10:08:37",
-          tags: ["home", "furniture", "decoration"]
+          exp: '07-09-2020:10:08:37',
+          tags: ['home', 'furniture', 'decoration']
         },
         {
           id: 0,
-          name: "Wooden Wardrobe",
-          img: "wardrobe_0",
+          name: 'Wooden Wardrobe',
+          img: 'wardrobe_0',
           sellerId: 7,
           highestBid: 109,
           numBids: 21,
-          exp: "07-09-2020:10:08:37",
-          tags: ["furniture", "living room"]
+          exp: '07-09-2020:10:08:37',
+          tags: ['furniture', 'living room']
         },
         {
           id: 0,
-          name: "Laundry Machine",
-          img: "laundry_0",
+          name: 'Laundry Machine',
+          img: 'laundry_0',
           sellerId: 5,
           highestBid: 57,
           numBids: 14,
-          exp: "07-09-2020:10:08:37",
-          tags: ["home", "utility"]
+          exp: '07-09-2020:10:08:37',
+          tags: ['home', 'utility']
         },
         {
           id: 0,
-          name: "Red Comfy Sofa",
-          img: "sofa_0",
+          name: 'Red Comfy Sofa',
+          img: 'sofa_0',
           sellerId: 7,
           highestBid: 109,
           numBids: 21,
-          exp: "07-09-2020:10:08:37",
-          tags: ["furniture", "living room"]
+          exp: '07-09-2020:10:08:37',
+          tags: ['furniture', 'living room']
         },
         {
           id: 0,
-          name: "Ikeo Garden Plant",
-          img: "vase_plant_0",
+          name: 'Ikeo Garden Plant',
+          img: 'vase_plant_0',
           sellerId: 2,
           highestBid: 68,
           numBids: 29,
-          exp: "07-09-2020:10:08:37",
-          tags: ["home", "furniture", "decoration"]
+          exp: '07-09-2020:10:08:37',
+          tags: ['home', 'furniture', 'decoration']
         },
         {
           id: 0,
-          name: "Laundry Machine",
-          img: "laundry_0",
+          name: 'Laundry Machine',
+          img: 'laundry_0',
           sellerId: 5,
           highestBid: 57,
           numBids: 14,
-          exp: "07-09-2020:10:08:37",
-          tags: ["home", "utility"]
+          exp: '07-09-2020:10:08:37',
+          tags: ['home', 'utility']
         },
         {
           id: 0,
-          name: "Red Comfy Sofa",
-          img: "sofa_0",
+          name: 'Red Comfy Sofa',
+          img: 'sofa_0',
           sellerId: 7,
           highestBid: 109,
           numBids: 21,
-          exp: "07-09-2020:10:08:37",
-          tags: ["furniture", "living room"]
+          exp: '07-09-2020:10:08:37',
+          tags: ['furniture', 'living room']
         },
         {
           id: 0,
-          name: "Ikeo Garden Plant",
-          img: "vase_plant_0",
+          name: 'Ikeo Garden Plant',
+          img: 'vase_plant_0',
           sellerId: 2,
           highestBid: 68,
           numBids: 29,
-          exp: "07-09-2020:10:08:37",
-          tags: ["home", "furniture", "decoration"]
+          exp: '07-09-2020:10:08:37',
+          tags: ['home', 'furniture', 'decoration']
         }
       ],
+      items: [],
       categories: [
-        { name: "Technology", img: "stove_0" },
-        { name: "Office", img: "office_chair_0" },
-        { name: "Food", img: "salad" },
-        { name: "Decoration", img: "vase_plant_0" },
-        { name: "Bedroom", img: "bunk_beds_0" },
-        { name: "Furniture", img: "office_chair_0" },
-        { name: "Decoration", img: "office_chair_0" },
-        { name: "Food", img: "office_chair_0" }
+        { name: 'Technology', img: 'stove_0' },
+        { name: 'Office', img: 'office_chair_0' },
+        { name: 'Food', img: 'salad' },
+        { name: 'Decoration', img: 'vase_plant_0' },
+        { name: 'Bedroom', img: 'bunk_beds_0' },
+        { name: 'Furniture', img: 'office_chair_0' },
+        { name: 'Decoration', img: 'office_chair_0' },
+        { name: 'Food', img: 'office_chair_0' }
       ],
       filters: [
         {
-          name: "Expiring Soon",
-          key: "exp_soon",
-          icon: "f252",
-          iconColor: "#15aabf"
+          name: 'Expiring Soon',
+          key: 'exp_soon',
+          icon: 'f252',
+          iconColor: '#15aabf'
         },
         {
-          name: "Under 100",
-          key: "under_one_hundred",
-          icon: "f53a",
-          iconColor: "#15aabf"
+          name: 'Under 100',
+          key: 'under_one_hundred',
+          icon: 'f53a',
+          iconColor: '#15aabf'
         },
-        { name: "Hot", key: "hot", icon: "f06d", iconColor: "#e38749" }
+        { name: 'Hot', key: 'hot', icon: 'f06d', iconColor: '#e38749' }
       ],
       sellers: [
-        { id: 2, name: "Steve Rogers" },
-        { id: 5, name: "Tony Stark" },
-        { id: 7, name: "Bruce Banners" }
+        { id: 2, name: 'Steve Rogers' },
+        { id: 5, name: 'Tony Stark' },
+        { id: 7, name: 'Bruce Banners' }
       ],
       signalrCore: null
     };
@@ -241,30 +237,30 @@ export default {
   methods: {
     getImg(imgName) {
       // Need to load asset in first
-      var _img = require("~/assets/items/" + imgName + ".png");
+      var _img = require('~/assets/items/' + imgName + '.png');
 
       // After loading it, we can return its path to 'src'
-      return "~/assets/items/" + imgName + ".png";
+      return '~/assets/items/' + imgName + '.png';
     },
     doSomething(item) {
-      console.log("tapped " + item.name);
+      console.log('tapped ' + item.name);
       this.placeBid();
-      const questionId = "b00c58c0-df00-49ac-ae85-0a135f75e01b";
+      const questionId = 'b00c58c0-df00-49ac-ae85-0a135f75e01b';
 
       axios
         .get(`https://localhost:5001/api/question`)
         .then(res => {
-          console.log("got question data!");
+          console.log('got question data!');
         })
         .catch(error => {
-          console.log("something went wrong getting the question");
+          console.log('something went wrong getting the question');
           console.log(error);
         });
 
       axios
         .patch(`https://localhost:5001/api/question/${this.questionId}/upvote`)
         .then(res => {
-          console.log("upvoted!");
+          console.log('upvoted!');
         });
     },
     getSellerById(sellerId) {
@@ -276,15 +272,15 @@ export default {
       return -1;
     },
     tapCategory(cat) {
-      console.log("showing " + cat.name);
+      console.log('showing ' + cat.name);
     },
     tapFilter(filter) {
-      console.log("Filtering by: " + filter.name);
+      console.log('Filtering by: ' + filter.name);
     },
     async connectToSocket() {
       return new Promise(resolve => {
         // Connect to server
-        this.io = new SocketIO("http://10.0.2.2:3030");
+        this.io = new SocketIO('http://10.0.2.2:3030');
         this.io.connect();
         resolve();
       });
@@ -299,67 +295,45 @@ export default {
       // Check that socket is connected
       if (!this.isConnected()) return;
 
-      console.log("placing bid...");
+      console.log('placing bid...');
 
-      var _bidDetails = { itemId: 4, amt: 8, user: "me" };
-      this.io.emit("place_bid", _bidDetails);
-    },
-    fetchItems() {
-      // Check that socket is connected
-      if (!this.isConnected()) return;
-
-      console.log("fetching items...");
-
-      // Fetch
-      this.io.emit("get_items", function(response) {
-        console.log("items recieved!");
-      });
+      var _bidDetails = { itemId: 4, amt: 8, user: 'me' };
+      this.io.emit('place_bid', _bidDetails);
     },
     updateItem() {
       var rand = Math.floor(Math.random() * (35 - 3 + 1) + 3);
       this.items[1].highestBid += rand;
     },
     goToItem(item) {
-      console.log("viewing an item");
+      console.log('viewing an item');
+
+      // Convert item guid to short string
+      console.log(item.id);
+      var idAsBase64 = guid_to_base64(item.id, true);
 
       // Navigate to item page
-      this.$navigateTo(routes["item"], {
-        props: { item: item },
+      this.$navigateTo(routes['item'], {
+        props: { itemId: idAsBase64 },
         transition: {
-          name: "fade",
+          name: 'fade',
           duration: 200
         }
       });
     },
-    async connectToHub() {
-      console.log("Attempting connection to hub..");
-      this.signalrCore = new SignalrCore();
-      this.signalrCore
-        .start("http://10.0.2.2:5000/question-hub")
-        .then(isConnected => {
-          console.log("Connection successful!");
+    fetchItems() {
+      // Load items from api
+      this.$http
+        .get(`/api/question/auction-items`)
+        .then(res => {
+          this.items = res.data;
         })
         .catch(error => {
-          console.log("Connection error");
+          console.log('something went wrong');
           console.log(error);
         });
-
-      this.signalrCore.on("connected", data => {
-        console.log("Connected to hub.");
-      });
-
-      // Subscriptions
-      this.signalrCore.on("sample", num => {
-        this.updateItem();
-      });
     }
   },
   async mounted() {
-    // console.log(this.$navigator.path)
-
-    // Connect to signalR hub
-    await this.connectToHub();
-
     // Get items
     this.fetchItems();
   }
@@ -368,7 +342,7 @@ export default {
 
 <style lang="scss" scoped>
 // Start custom common variables
-@import "~@nativescript/theme/scss/variables/blue";
+@import '~@nativescript/theme/scss/variables/blue';
 // End custom common variables
 
 // Custom styles
@@ -386,7 +360,7 @@ ActionBar {
 
 .content {
   background-color: #ffffff;
-  font-family: "TT Norms";
+  font-family: 'TT Norms';
 
   .head {
     color: rgb(49, 49, 49);
