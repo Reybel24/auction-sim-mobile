@@ -1,60 +1,45 @@
 <template lang="html">
-    <BottomNavigation>
-        <TabStrip>
-            <TabStripItem class="navigation__item">
-                <Label text="Home"></Label>
-                <Image src.decode="font://&#xf015;" class="fas t-36"></Image>
-            </TabStripItem>
-            <TabStripItem class="navigation__item">
-                <Label text="Browse"></Label>
-                <Image src.decode="font://&#xf1ea;" class="far t-36"></Image>
-            </TabStripItem>
-            <TabStripItem class="navigation__item">
-                <Label text="Search"></Label>
-                <Image src.decode="font://&#xf002;" class="fas t-36"></Image>
-            </TabStripItem>
-        </TabStrip>
-
-        <TabContentItem>
-            <Frame id="items">
-                <Items/>
+<Page>
+    <GridLayout rows="*, auto" backgroundColor="lightgray">
+        <ContentView row="0">
+            <Frame>
+                <Search />
             </Frame>
-        </TabContentItem>
+        </ContentView>
 
-        <TabContentItem>
-            <Frame id="browse">
-                <Browse/>
-            </Frame>
-        </TabContentItem>
-
-        <TabContentItem>
-            <Frame id="search">
-                <Search/>
-            </Frame>
-        </TabContentItem>
-
-    </BottomNavigation>
+        <Nav row="1" />
+    </GridLayout>
+</Page>
 </template>
 
 <script>
-  import Items from "./Items.vue";
-  import Browse from "./Browse.vue";
-  import Search from "./Search.vue";
+// Nav bar
+import Nav from './Nav.vue';
+import Search from './Search.vue';
 
-  export default {
-    components: {
-      Items,
-      Browse,
-      Search
-    }
-  };
+export default {
+  components: {
+    Nav,
+    Search
+  },
+  methods: {}
+};
 </script>
 
 <style lang="scss">
-    // Start custom common variables
-    @import "~@nativescript/theme/scss/variables/blue";
-    // End custom common variables
+// Import custom common variables
+@import '~@nativescript/theme/scss/variables/blue';
 
-    // Custom styles
+// Custom styles
+.action-bar {
+  background-color: #ffffff;
+  color: red;
+  border-color: rgb(153, 153, 153);
+  border-bottom-width: 1px;
+  height: 300px;
 
+  image {
+    width: 325px;
+  }
+}
 </style>
