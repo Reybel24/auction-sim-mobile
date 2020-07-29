@@ -1,5 +1,5 @@
 <template>
-  <FlexBoxLayout class="nav">
+  <FlexBoxLayout class="nav" androidElevation="15">
     <FlexBoxLayout class="item" @tap="goTo('home')">
       <Label :text="String.fromCharCode(0xf015)" class="fas icon" />
     </FlexBoxLayout>
@@ -39,7 +39,7 @@ export default {
   background-color: white;
   flex-direction: row;
   justify-content: space-evenly;
-  padding: 50px 0 50px 0;
+  padding: 65px 0 65px 0;
   box-shadow: 0px -4px 5px 0px rgba(235, 235, 235, 1);
 
   .item {
@@ -48,7 +48,7 @@ export default {
     flex: 1;
 
     .icon {
-      font-size: 20px;
+      font-size: 21px;
       color: #6c678e;
 
       &:selected {
