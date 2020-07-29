@@ -17,6 +17,10 @@ export default {
         console.log(error)
       });
 
+    connection.close(() => {
+      console.log('connection to hub closed')
+    })
+
     // use new Vue instance as an event bus
     const itemHub = new Vue()
 
@@ -26,6 +30,11 @@ export default {
     // Forward server side SignalR events through $itemHub, where components will listen to them
     connection.on('ItemBidChange', (itemId, bid) => {
       itemHub.$emit('bid-changed', { itemId, bid })
+    })
+
+    // Subscriptions
+    connection.on('BidPlaced', bid => {
+      itemHub.$emit('bid-placed', bid.arguments[0])
     })
 
     // Handle groups

@@ -323,7 +323,7 @@ export default {
     fetchItems() {
       // Load items from api
       this.$http
-        .get(`/api/question/auction-items`)
+        .get(`/api/auction-items`)
         .then(res => {
           this.items = res.data;
         })
@@ -351,7 +351,7 @@ ActionBar {
   color: red;
   border-color: rgb(153, 153, 153);
   border-bottom-width: 1px;
-  height: 300px;
+  height: 250px;
 
   image {
     width: 325px;
