@@ -10,6 +10,6 @@
 
 **Proto**
 
-![browse](https://github.com/Reybel24/auction-sim-mobile/blob/dev/src/assets/screens/screen-auction-sim-phone-browse.png)
+![browse](https://github.com/Reybel24/auction-sim-mobile/blob/dev/app/assets/screens/screen-auction-sim-phone-browse.png)
 
 ---
