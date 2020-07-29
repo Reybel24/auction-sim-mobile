@@ -1,6 +1,7 @@
 import VueDevtools from 'nativescript-vue-devtools'
 import Vue from 'nativescript-vue';
 import axios from 'axios'
+import store from '@/store'
 
 import App from './components/App';
 
@@ -17,5 +18,6 @@ Vue.use(ItemHub)
 Vue.config.silent = false;
 
 new Vue({
+    store,
     render: h => h(App)
 }).$start();

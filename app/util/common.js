@@ -1,6 +1,5 @@
 // Convert GUID string to Base-64 in Javascript
 // by Mark Seecof, 2012-03-31
-
 var hexlist = '0123456789abcdef';
 var b64list = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
@@ -35,4 +34,9 @@ export function guid_to_base64(g, le) {
     // r += '==';
 
     return r;
-} // guid_to_base64()
+}
+
+// Generate a random int,inclusive
+export function randomNumberBetween(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
