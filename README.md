@@ -8,7 +8,7 @@
 - Real-time bidding and alerts powered by a backend in .Net Core with SignalR runningon Azure
 - MongoDB database to keep track of users, transactions, and marketplace items
 
-**Proto**
+**Preview**
 
 ![browse](https://github.com/Reybel24/auction-sim-mobile/blob/dev/app/assets/screens/screen-auction-sim-phone-browse.png)
 
